@@ -1,10 +1,13 @@
 <!DOCTYPE html>
 <html>
 <head>
+
 <meta name="viewport" content="width=device-width, initial-scale=1">
+
 <title>Watch Log</title>
 
 <style>
+
 body{
 font-family:-apple-system,BlinkMacSystemFont,sans-serif;
 background:#f5f5f5;
@@ -13,6 +16,14 @@ padding:20px;
 
 h1{
 text-align:center;
+}
+
+.dashboard{
+background:#111;
+color:white;
+border-radius:15px;
+padding:15px;
+margin-bottom:20px;
 }
 
 .card{
@@ -51,16 +62,34 @@ border-radius:10px;
 }
 
 </style>
+
 </head>
+
 
 <body>
 
 <h1>⌚ Watch Log</h1>
 
-<div id="watches"></div>
+
+<div class="dashboard">
+
+<h2>📊 Dashboard</h2>
+
+<p id="totalWatch"></p>
+
+<p id="totalCount"></p>
+
+<p id="topWatch"></p>
+
+<p id="lastWatch"></p>
+
+</div>
 
 
-<script>
+<h2>⌚ Collection</h2>
+
+
+<div id="watches"></div><script>
 
 const watches=[
 
@@ -111,20 +140,22 @@ history:[]
 }
 
 
-let today=new Date();
+let d=new Date();
 
 let date=
-today.getFullYear()+"/"+
-(today.getMonth()+1)+"/"+
-today.getDate();
+d.getFullYear()+"/"+
+(d.getMonth()+1)+"/"+
+d.getDate();
 
 
 data[name].count++;
 data[name].last=date;
 
+
 if(!data[name].history){
 data[name].history=[];
 }
+
 
 data[name].history.unshift(date);
 
@@ -136,6 +167,54 @@ JSON.stringify(data)
 
 
 display();
+
+}
+
+
+
+function dashboard(){
+
+let total=0;
+let top="";
+let max=0;
+let latest="なし";
+
+
+watches.forEach(w=>{
+
+let item=data[w.name] || {count:0,last:"なし"};
+
+total+=item.count;
+
+
+if(item.count>max){
+max=item.count;
+top=w.name;
+}
+
+
+if(item.last!=="なし"){
+latest=w.name+" ("+item.last+")";
+}
+
+
+});
+
+
+document.getElementById("totalWatch").innerHTML=
+"所有時計："+watches.length+"本";
+
+
+document.getElementById("totalCount").innerHTML=
+"総着用回数："+total+"回";
+
+
+document.getElementById("topWatch").innerHTML=
+"🏆 一番着けている時計："+(top||"まだ記録なし");
+
+
+document.getElementById("lastWatch").innerHTML=
+"📅 最終着用："+latest;
 
 }
 
@@ -158,17 +237,14 @@ history:[]
 };
 
 
-let historyText="";
+let history="まだ記録なし";
 
-if(item.history.length>0){
 
-historyText=item.history
+if(item.history.length){
+
+history=item.history
 .map(h=>"・"+h)
 .join("<br>");
-
-}else{
-
-historyText="まだ記録なし";
 
 }
 
@@ -195,11 +271,12 @@ area.innerHTML+=`
 
 <div class="history">
 
-<strong>着用履歴</strong>
-<br>
-${historyText}
+<strong>着用履歴</strong><br>
+
+${history}
 
 </div>
+
 
 <br>
 
@@ -214,6 +291,9 @@ ${historyText}
 `;
 
 });
+
+
+dashboard();
 
 }
 
