@@ -43,8 +43,14 @@ font-size:15px;
 font-size:18px;
 font-weight:bold;
 }
-</style>
 
+.history{
+background:#eee;
+padding:10px;
+border-radius:10px;
+}
+
+</style>
 </head>
 
 <body>
@@ -56,7 +62,7 @@ font-weight:bold;
 
 <script>
 
-const watches = [
+const watches=[
 
 {
 name:"ロレックス サブマリーナ ノンデイト",
@@ -91,7 +97,7 @@ image:"images/IMG_9659.jpeg"
 ];
 
 
-let data = JSON.parse(localStorage.getItem("watchData")) || {};
+let data=JSON.parse(localStorage.getItem("watchData")) || {};
 
 
 function wear(name){
@@ -99,18 +105,28 @@ function wear(name){
 if(!data[name]){
 data[name]={
 count:0,
-last:"なし"
+last:"なし",
+history:[]
 };
 }
 
-data[name].count++;
 
 let today=new Date();
 
-data[name].last =
+let date=
 today.getFullYear()+"/"+
 (today.getMonth()+1)+"/"+
 today.getDate();
+
+
+data[name].count++;
+data[name].last=date;
+
+if(!data[name].history){
+data[name].history=[];
+}
+
+data[name].history.unshift(date);
 
 
 localStorage.setItem(
@@ -137,15 +153,32 @@ watches.forEach(w=>{
 
 let item=data[w.name] || {
 count:0,
-last:"なし"
+last:"なし",
+history:[]
 };
 
 
-area.innerHTML += `
+let historyText="";
+
+if(item.history.length>0){
+
+historyText=item.history
+.map(h=>"・"+h)
+.join("<br>");
+
+}else{
+
+historyText="まだ記録なし";
+
+}
+
+
+area.innerHTML+=`
 
 <div class="card">
 
 <img class="watch-img" src="${w.image}">
+
 
 <h2>⌚ ${w.name}</h2>
 
@@ -160,6 +193,17 @@ area.innerHTML += `
 </p>
 
 
+<div class="history">
+
+<strong>着用履歴</strong>
+<br>
+${historyText}
+
+</div>
+
+<br>
+
+
 <button onclick="wear('${w.name}')">
 今日着けた
 </button>
@@ -169,9 +213,7 @@ area.innerHTML += `
 
 `;
 
-
 });
-
 
 }
 
