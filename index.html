@@ -1,26 +1,185 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Watch Log</title>
+
+<style>
+body{
+font-family:-apple-system,BlinkMacSystemFont,sans-serif;
+background:#f5f5f5;
+padding:20px;
+}
+
+h1{
+text-align:center;
+}
+
+.card{
+background:white;
+border-radius:15px;
+padding:15px;
+margin-bottom:15px;
+box-shadow:0 2px 8px #ccc;
+}
+
+.watch-img{
+width:100%;
+max-height:300px;
+object-fit:cover;
+border-radius:12px;
+}
+
+button{
+background:#111;
+color:white;
+border:none;
+padding:10px 15px;
+border-radius:10px;
+font-size:15px;
+}
+
+.count{
+font-size:18px;
+font-weight:bold;
+}
+</style>
+
+</head>
+
+<body>
+
+<h1>⌚ Watch Log</h1>
+
+<div id="watches"></div>
+
+
+<script>
+
 const watches = [
+
 {
 name:"ロレックス サブマリーナ ノンデイト",
 image:"images/IMG_2638.jpeg"
 },
+
 {
 name:"ロレックス ヨットマスター37",
 image:"images/IMG_3378.jpeg"
 },
+
 {
 name:"ロレックス エクスプローラー36",
 image:"images/41185953-24CB-4223-997D-29C1D9C4AD32.jpeg"
 },
+
 {
 name:"ロレックス GMTマスター2 コンビ エバーローズ",
 image:"images/IMG_6357.jpeg"
 },
+
 {
 name:"ハミルトン カーキフィールド メカニカル",
 image:"images/IMG_9658.jpeg"
 },
+
 {
 name:"G-SHOCK 初代復刻モデル",
 image:"images/IMG_9659.jpeg"
 }
+
 ];
+
+
+let data = JSON.parse(localStorage.getItem("watchData")) || {};
+
+
+function wear(name){
+
+if(!data[name]){
+data[name]={
+count:0,
+last:"なし"
+};
+}
+
+data[name].count++;
+
+let today=new Date();
+
+data[name].last =
+today.getFullYear()+"/"+
+(today.getMonth()+1)+"/"+
+today.getDate();
+
+
+localStorage.setItem(
+"watchData",
+JSON.stringify(data)
+);
+
+
+display();
+
+}
+
+
+
+function display(){
+
+let area=document.getElementById("watches");
+
+area.innerHTML="";
+
+
+watches.forEach(w=>{
+
+
+let item=data[w.name] || {
+count:0,
+last:"なし"
+};
+
+
+area.innerHTML += `
+
+<div class="card">
+
+<img class="watch-img" src="${w.image}">
+
+<h2>⌚ ${w.name}</h2>
+
+
+<p>
+最終着用日：${item.last}
+</p>
+
+
+<p class="count">
+着用回数：${item.count}回
+</p>
+
+
+<button onclick="wear('${w.name}')">
+今日着けた
+</button>
+
+
+</div>
+
+`;
+
+
+});
+
+
+}
+
+
+display();
+
+
+</script>
+
+</body>
+</html>
