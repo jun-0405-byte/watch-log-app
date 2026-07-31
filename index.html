@@ -88,7 +88,10 @@ border-radius:10px;
 
 <h2>⌚ Collection</h2>
 
-
+<div class="card">
+<h2>🏆 着用ランキング</h2>
+<div id="ranking"></div>
+</div>
 <div id="watches"></div><script>
 
 const watches=[
@@ -218,7 +221,34 @@ document.getElementById("lastWatch").innerHTML=
 
 }
 
+function updateRanking(){
 
+const ranking = [...watches]
+.map(w => ({
+name: w.name,
+count: (data[w.name]?.count || 0)
+}))
+.sort((a,b)=>b.count-a.count);
+
+let html="";
+
+ranking.forEach((w,index)=>{
+
+const medal =
+index===0 ? "🥇" :
+index===1 ? "🥈" :
+index===2 ? "🥉" :
+(index+1)+"位";
+
+html += `
+<p>${medal} ${w.name}<br><strong>${w.count}回</strong></p>
+`;
+
+});
+
+document.getElementById("ranking").innerHTML = html;
+
+}
 
 function display(){
 
@@ -294,7 +324,7 @@ ${history}
 
 
 dashboard();
-
+updateRanking();
 }
 
 
