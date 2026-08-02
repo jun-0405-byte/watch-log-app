@@ -461,3 +461,76 @@ updateCalendar();
 
 
 display();
+function setupWatchSelect(){
+
+let select =
+document.getElementById("watchSelect");
+
+
+if(!select) return;
+
+
+select.innerHTML="";
+
+
+watches.forEach(w=>{
+
+select.innerHTML += `
+
+<option value="${w.name}">
+${w.name}
+</option>
+
+`;
+
+});
+
+}
+
+
+
+function addWearLog(){
+
+let date =
+document.getElementById("wearDate").value;
+
+
+let watch =
+document.getElementById("watchSelect").value;
+
+
+if(!date){
+
+alert("日付を選択してください");
+
+return;
+
+}
+
+
+let logs =
+JSON.parse(localStorage.getItem("wearLogs")) || [];
+
+
+logs.push({
+
+date:date,
+
+watch:watch
+
+});
+
+
+localStorage.setItem(
+"wearLogs",
+JSON.stringify(logs)
+);
+
+
+alert("記録しました");
+
+
+}
+
+
+setupWatchSelect();
