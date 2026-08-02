@@ -215,7 +215,43 @@ document.getElementById("lastWatch").innerHTML=
 }
 
 function updateRanking(){
+function updateCalendar(){
 
+let html="";
+
+
+watches.forEach(w=>{
+
+let item=data[w.name] || {history:[]};
+
+
+if(item.history){
+
+item.history.forEach(date=>{
+
+html += `
+
+<div class="calendar-day">
+
+📅 ${date}<br>
+
+⌚ ${w.name}
+
+</div>
+
+`;
+
+});
+
+}
+
+});
+
+
+document.getElementById("calendar").innerHTML =
+html || "まだ着用記録がありません";
+
+}
 const ranking = [...watches]
 .map(w => ({
 name: w.name,
@@ -318,6 +354,7 @@ ${history}
 
 dashboard();
 updateRanking();
+updateCalendar();
 }
 
 
