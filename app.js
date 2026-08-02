@@ -70,7 +70,56 @@ localStorage.setItem(
 JSON.stringify(data)
 );
 
+function updateCalendar(){
 
+let html="";
+
+
+let dates=[];
+
+
+watches.forEach(w=>{
+
+let item=data[w.name] || {};
+
+if(item.history){
+
+item.history.forEach(date=>{
+
+dates.push({
+date:date,
+name:w.name
+});
+
+});
+
+}
+
+});
+
+
+dates.forEach(d=>{
+
+html += `
+
+<div class="calendar-day">
+
+📅 ${d.date}<br>
+
+⌚ ${d.name}
+
+</div>
+
+`;
+
+});
+
+
+document.getElementById("calendar").innerHTML =
+html || "まだ着用記録がありません";
+
+
+}
 display();
 
 }
@@ -211,7 +260,7 @@ area.innerHTML += `
 
 updateDashboard();
 updateRanking();
-
+updateCalendar();
 }
 
 
