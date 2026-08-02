@@ -534,3 +534,46 @@ alert("記録しました");
 
 
 setupWatchSelect();
+function showCalendar(){
+
+let calendar =
+document.getElementById("calendar");
+
+
+if(!calendar) return;
+
+
+let logs =
+JSON.parse(localStorage.getItem("wearLogs")) || [];
+
+
+let html="";
+
+
+logs.forEach(log=>{
+
+
+html += `
+
+<div class="calendar-day">
+
+📅 ${log.date}<br>
+
+⌚ ${log.watch}
+
+</div>
+
+`;
+
+
+});
+
+
+calendar.innerHTML =
+html || "まだ記録がありません";
+
+
+}
+
+
+showCalendar();
