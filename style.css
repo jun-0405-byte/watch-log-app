@@ -56,3 +56,14 @@ background:white;
 border-radius:15px;
 padding:10px;
 }
+#calendar{
+background:white;
+border-radius:15px;
+padding:15px;
+line-height:1.8;
+}
+
+.calendar-day{
+padding:8px;
+border-bottom:1px solid #ddd;
+}
