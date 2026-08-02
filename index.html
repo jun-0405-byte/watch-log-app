@@ -6,48 +6,7 @@
 
 <title>Watch Log</title>
 
-<style>
-
-body{
-font-family:-apple-system,BlinkMacSystemFont,sans-serif;
-background:#f5f5f5;
-padding:20px;
-}
-
-h1{
-text-align:center;
-}
-
-.dashboard{
-background:#111;
-color:white;
-border-radius:15px;
-padding:15px;
-margin-bottom:20px;
-}
-
-.card{
-background:white;
-border-radius:15px;
-padding:15px;
-margin-bottom:15px;
-box-shadow:0 2px 8px #ccc;
-}
-
-.watch-img{
-width:100%;
-max-height:300px;
-object-fit:cover;
-border-radius:12px;
-}
-
-button{
-background:#111;
-color:white;
-border:none;
-padding:10px 15px;
-bord
-</style>
+<link rel="stylesheet" href="style.css">
 
 </head>
 
@@ -72,334 +31,31 @@ bord
 </div>
 
 
-<h2>⌚ Collection</h2>
+<div class="card">
+
+<h2>🏆 着用ランキング</h2>
+
+<div id="ranking"></div>
+
+</div>
+
 
 <div class="card">
-<h2>🏆 着用ランキング</h2>
-<div id="ranking"></div>
-</div>
-  <div class="card">
 
 <h2>📅 Wear Calendar</h2>
 
 <div id="calendar"></div>
 
 </div>
-<div id="watches"></div><script>
 
-const watches=[
 
-{
-name:"ロレックス サブマリーナ ノンデイト",
-image:"images/IMG_2638.jpeg"
-},
+<h2>⌚ Collection</h2>
 
-{
-name:"ロレックス ヨットマスター37",
-image:"images/IMG_3378.jpeg"
-},
+<div id="watches"></div>
 
-{
-name:"ロレックス エクスプローラー36",
-image:"images/41185953-24CB-4223-997D-29C1D9C4AD32.jpeg"
-},
 
-{
-name:"ロレックス GMTマスター2 コンビ エバーローズ",
-image:"images/IMG_6357.jpeg"
-},
-
-{
-name:"ハミルトン カーキフィールド メカニカル",
-image:"images/IMG_9658.jpeg"
-},
-
-{
-name:"G-SHOCK 初代復刻モデル",
-image:"images/IMG_9659.jpeg"
-}
-
-];
-
-
-let data=JSON.parse(localStorage.getItem("watchData")) || {};
-
-
-function wear(name){
-
-if(!data[name]){
-data[name]={
-count:0,
-last:"なし",
-history:[]
-};
-}
-
-
-let d=new Date();
-
-let date=
-d.getFullYear()+"/"+
-(d.getMonth()+1)+"/"+
-d.getDate();
-
-
-data[name].count++;
-data[name].last=date;
-
-
-if(!data[name].history){
-data[name].history=[];
-}
-
-
-data[name].history.unshift(date);
-
-
-localStorage.setItem(
-"watchData",
-JSON.stringify(data)
-);
-
-
-display();
-
-}
-
-
-
-function dashboard(){
-
-let total=0;
-let top="";
-let max=0;
-let latest="なし";
-
-
-watches.forEach(w=>{
-
-let item=data[w.name] || {count:0,last:"なし"};
-
-total+=item.count;
-
-
-if(item.count>max){
-max=item.count;
-top=w.name;
-}
-
-
-if(item.last!=="なし"){
-latest=w.name+" ("+item.last+")";
-}
-
-
-});
-
-
-document.getElementById("totalWatch").innerHTML=
-"所有時計："+watches.length+"本";
-
-
-document.getElementById("totalCount").innerHTML=
-"総着用回数："+total+"回";
-
-
-document.getElementById("topWatch").innerHTML=
-"🏆 一番着けている時計："+(top||"まだ記録なし");
-
-
-document.getElementById("lastWatch").innerHTML=
-"📅 最終着用："+latest;
-
-}
-
-function updateCalendar(){
-
-let html="";
-
-
-watches.forEach(w=>{
-
-let item=data[w.name] || {history:[]};
-
-
-if(item.history){
-
-item.history.forEach(date=>{
-
-html += `
-
-<div class="calendar-day">
-
-📅 ${date}<br>
-
-⌚ ${w.name}
-
-</div>
-
-`;
-
-});
-
-}
-
-});
-
-
-document.getElementById("calendar").innerHTML =
-html || "まだ着用記録がありません";
-
-}
-
-
-function updateRanking(){
-
-let html="";
-
-
-watches.forEach(w=>{
-
-let item=data[w.name] || {history:[]};
-
-
-if(item.history){
-
-item.history.forEach(date=>{
-
-html += `
-
-<div class="calendar-day">
-
-📅 ${date}<br>
-
-⌚ ${w.name}
-
-</div>
-
-`;
-
-});
-
-}
-
-});
-
-
-document.getElementById("calendar").innerHTML =
-html || "まだ着用記録がありません";
-
-}
-const ranking = [...watches]
-.map(w => ({
-name: w.name,
-count: (data[w.name]?.count || 0)
-}))
-.sort((a,b)=>b.count-a.count);
-
-let html="";
-
-ranking.forEach((w,index)=>{
-
-const medal =
-index===0 ? "🥇" :
-index===1 ? "🥈" :
-index===2 ? "🥉" :
-(index+1)+"位";
-
-html += `
-<p>${medal} ${w.name}<br><strong>${w.count}回</strong></p>
-`;
-
-});
-
-document.getElementById("ranking").innerHTML = html;
-
-}
-
-function display(){
-
-let area=document.getElementById("watches");
-
-area.innerHTML="";
-
-
-watches.forEach(w=>{
-
-
-let item=data[w.name] || {
-count:0,
-last:"なし",
-history:[]
-};
-
-
-let history="まだ記録なし";
-
-
-if(item.history.length){
-
-history=item.history
-.map(h=>"・"+h)
-.join("<br>");
-
-}
-
-
-area.innerHTML+=`
-
-<div class="card">
-
-<img class="watch-img" src="${w.image}">
-
-
-<h2>⌚ ${w.name}</h2>
-
-
-<p>
-最終着用日：${item.last}
-</p>
-
-
-<p class="count">
-着用回数：${item.count}回
-</p>
-
-
-<div class="history">
-
-<strong>着用履歴</strong><br>
-
-${history}
-
-</div>
-
-
-<br>
-
-
-<button onclick="wear('${w.name}')">
-今日着けた
-</button>
-
-
-</div>
-
-`;
-
-});
-
-
-dashboard();
-updateRanking();
-updateCalendar();
-}
-
-
-display();
-
-
-</script>
 <script src="app.js"></script>
+
 </body>
+
 </html>
