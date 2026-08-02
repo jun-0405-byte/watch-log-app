@@ -265,3 +265,199 @@ updateCalendar();
 
 
 display();
+function updateRanking(){
+
+const ranking=[...watches]
+
+.map(w=>({
+
+name:w.name,
+
+count:data[w.name]?.count || 0
+
+}))
+
+.sort((a,b)=>b.count-a.count);
+
+
+let html="";
+
+
+ranking.forEach((w,index)=>{
+
+
+let medal =
+index===0 ? "🥇" :
+index===1 ? "🥈" :
+index===2 ? "🥉" :
+(index+1)+"位";
+
+
+html += `
+
+<p>
+${medal} ${w.name}<br>
+<strong>${w.count}回</strong>
+</p>
+
+`;
+
+});
+
+
+document.getElementById("ranking").innerHTML=html;
+
+}
+
+
+
+
+function updateCalendar(){
+
+let html="";
+
+
+watches.forEach(w=>{
+
+
+let item=data[w.name] || {history:[]};
+
+
+if(item.history){
+
+
+item.history.forEach(date=>{
+
+
+html += `
+
+<div class="calendar-day">
+
+📅 ${date}<br>
+
+⌚ ${w.name}
+
+</div>
+
+`;
+
+});
+
+
+}
+
+
+});
+
+
+document.getElementById("calendar").innerHTML =
+
+html || "まだ着用記録がありません";
+
+
+}
+
+
+
+
+function display(){
+
+
+let area=document.getElementById("watches");
+
+
+area.innerHTML="";
+
+
+watches.forEach(w=>{
+
+
+let item=data[w.name] || {
+
+count:0,
+
+last:"なし",
+
+history:[]
+
+};
+
+
+let history="まだ記録なし";
+
+
+if(item.history.length){
+
+
+history=item.history
+
+.map(h=>"・"+h)
+
+.join("<br>");
+
+}
+
+
+area.innerHTML += `
+
+<div class="card">
+
+
+<img class="watch-img" src="${w.image}">
+
+
+<h2>⌚ ${w.name}</h2>
+
+
+<p>
+
+最終着用日：${item.last}
+
+</p>
+
+
+<p class="count">
+
+着用回数：${item.count}回
+
+</p>
+
+
+<div class="history">
+
+<strong>着用履歴</strong><br>
+
+${history}
+
+</div>
+
+
+<br>
+
+
+<button onclick="wear('${w.name}')">
+
+今日着けた
+
+</button>
+
+
+</div>
+
+`;
+
+});
+
+
+updateDashboard();
+
+updateRanking();
+
+updateCalendar();
+
+
+}
+
+
+
+display();
