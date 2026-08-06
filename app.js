@@ -243,6 +243,7 @@ area.innerHTML += `
 最終着用日：${item.last}
 </p>
 
+
 <p class="count">
 着用回数：${item.count}回
 </p>
@@ -577,3 +578,12 @@ html || "まだ記録がありません";
 
 
 showCalendar();
+let currentDate = new Date();
+
+function changeMonth(diff){
+
+  currentDate.setMonth(currentDate.getMonth() + diff);
+
+  showMonthCalendar();
+
+}
