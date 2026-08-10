@@ -1,69 +1,230 @@
-body{
-font-family:-apple-system,BlinkMacSystemFont,sans-serif;
-background:#f5f5f5;
-padding:20px;
+* {
+  box-sizing: border-box;
 }
 
-h1{
-text-align:center;
+body {
+  margin: 0;
+  padding: 20px;
+  background: #f5f5f5;
+  color: #222;
+  font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
 }
 
-.dashboard{
-background:#111;
-color:white;
-border-radius:15px;
-padding:15px;
-margin-bottom:20px;
+h1 {
+  text-align: center;
+  margin: 10px 0 25px;
 }
 
-.card{
-background:white;
-border-radius:15px;
-padding:15px;
-margin-bottom:15px;
-box-shadow:0 2px 8px #ccc;
+h2 {
+  margin-top: 0;
 }
 
-.watch-img{
-width:100%;
-max-height:300px;
-object-fit:cover;
-border-radius:12px;
+.dashboard,
+.card {
+  width: 100%;
+  max-width: 700px;
+  margin: 0 auto 20px;
+  padding: 18px;
+  background: white;
+  border-radius: 14px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
-button{
-background:#111;
-color:white;
-border:none;
-padding:10px 15px;
-border-radius:10px;
-font-size:15px;
+/* Dashboard */
+
+.dashboard p {
+  margin: 8px 0;
 }
 
-.count{
-font-size:18px;
-font-weight:bold;
+/* Ranking */
+
+.ranking-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
 }
 
-.history{
-background:#eee;
-padding:10px;
-border-radius:10px;
+.ranking-item strong {
+  min-width: 40px;
 }
 
-#ranking{
-background:white;
-border-radius:15px;
-padding:10px;
-}
-#calendar{
-background:white;
-border-radius:15px;
-padding:15px;
-line-height:1.8;
+.ranking-item span {
+  margin-left: auto;
 }
 
-.calendar-day{
-padding:8px;
-border-bottom:1px solid #ddd;
+/* Calendar */
+
+.calendar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 15px;
+}
+
+.calendar-header h3 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.calendar-header button {
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 8px;
+  background: #111;
+  color: white;
+  font-size: 18px;
+}
+
+/*
+  ここが重要。
+  カレンダーを必ず7列にする。
+*/
+
+#calendar {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  width: 100%;
+  gap: 4px;
+}
+
+/* 曜日 */
+
+.calendar-weekday {
+  text-align: center;
+  font-weight: bold;
+  padding: 8px 0;
+  font-size: 13px;
+}
+
+/* 日付 */
+
+.calendar-day {
+  min-width: 0;
+  min-height: 70px;
+  padding: 5px;
+  border: 1px solid #eee;
+  border-radius: 6px;
+  background: white;
+  overflow: hidden;
+}
+
+.calendar-day.empty {
+  background: transparent;
+  border: none;
+}
+
+.calendar-number {
+  font-size: 13px;
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+
+/* 今日 */
+
+.calendar-day.today {
+  border: 2px solid #111;
+}
+
+/* 着用した日 */
+
+.calendar-day.has-wear {
+  background: #f0f0f0;
+}
+
+.calendar-watches {
+  font-size: 9px;
+  line-height: 1.25;
+  word-break: break-word;
+}
+
+/* 着用登録 */
+
+label {
+  font-weight: bold;
+}
+
+input,
+select {
+  width: 100%;
+  max-width: 100%;
+  padding: 12px;
+  margin-top: 5px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 16px;
+  background: white;
+}
+
+.card button {
+  padding: 12px 18px;
+  border: none;
+  border-radius: 8px;
+  background: #111;
+  color: white;
+  font-size: 15px;
+}
+
+/* Collection */
+
+#watches {
+  width: 100%;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.watch-card {
+  margin-bottom: 20px;
+  padding: 15px;
+  background: white;
+  border-radius: 14px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.watch-card img {
+  display: block;
+  width: 100%;
+  max-width: 300px;
+  height: auto;
+  margin: 0 auto 12px;
+  border-radius: 10px;
+}
+
+.watch-card h3 {
+  margin: 10px 0;
+}
+
+.watch-card p {
+  margin: 6px 0;
+}
+
+/* iPhone */
+
+@media (max-width: 600px) {
+
+  body {
+    padding: 10px;
+  }
+
+  .dashboard,
+  .card {
+    padding: 14px;
+    border-radius: 12px;
+  }
+
+  .calendar-day {
+    min-height: 58px;
+    padding: 4px;
+  }
+
+  .calendar-number {
+    font-size: 12px;
+  }
+
+  .calendar-watches {
+    font-size: 8px;
+  }
+
 }
