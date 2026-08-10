@@ -399,7 +399,35 @@ function renderCalendar() {
 
 }
 
+// ==============================
+// 履歴削除
+// ==============================
 
+function deleteWearLog(index) {
+
+  const log = wearLogs[index];
+
+  if (!log) {
+    return;
+  }
+
+  const result = confirm(
+    `${log.name}\n${formatDisplayDate(log.date)} の着用記録を削除しますか？`
+  );
+
+  if (!result) {
+    return;
+  }
+
+  wearLogs.splice(index, 1);
+
+  localStorage.setItem(
+    "watchWearLogs",
+    JSON.stringify(wearLogs)
+  );
+
+  renderAll();
+}
 // ==============================
 // 月変更
 // ==============================
