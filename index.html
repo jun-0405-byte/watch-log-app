@@ -10,26 +10,20 @@
 
 </head>
 
-
 <body>
 
 <h1>⌚ Watch Log</h1>
-
 
 <div class="dashboard">
 
 <h2>📊 Dashboard</h2>
 
 <p id="totalWatch"></p>
-
 <p id="totalCount"></p>
-
 <p id="topWatch"></p>
-
 <p id="lastWatch"></p>
 
 </div>
-
 
 <div class="card">
 
@@ -39,37 +33,29 @@
 
 </div>
 
-
 <div class="card">
 
 <h2>📅 Wear Calendar</h2>
 
 <div class="calendar-header">
 
-<button onclick="changeMonth(-1)">
-◀
-</button>
+<button onclick="changeMonth(-1)">◀</button>
 
 <h3 id="calendarTitle"></h3>
 
-<button onclick="changeMonth(1)">
-▶
-</button>
+<button onclick="changeMonth(1)">▶</button>
 
 </div>
-
 
 <div id="calendar"></div>
 
-
 </div>
+
 <div class="card">
 
 <h2>📝 着用登録</h2>
 
-<label>
-📅 日付
-</label>
+<label>📅 日付</label>
 
 <br>
 
@@ -77,9 +63,7 @@
 
 <br><br>
 
-<label>
-⌚ 時計
-</label>
+<label>⌚ 時計</label>
 
 <br>
 
@@ -87,16 +71,21 @@
 
 <br><br>
 
-<button onclick="addWearLog()">
-記録する
-</button>
+<button onclick="addWearLog()">記録する</button>
+
+</div>
+
+<div class="card">
+
+<h2>📋 着用履歴</h2>
+
+<div id="wearHistory"></div>
 
 </div>
 
 <h2>⌚ Collection</h2>
 
 <div id="watches"></div>
-
 
 <script src="app.js"></script>
 
