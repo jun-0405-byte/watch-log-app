@@ -103,7 +103,7 @@ function addWearLog() {
   const date = document.getElementById("wearDate").value;
   const watchIndex = document.getElementById("watchSelect").value;
 
-  if (!date) {
+  if (!date) {https://github.com/jun-0405-byte/watch-log-app/edit/main/app.js?utm_source=chatgpt.com
     alert("日付を選択してください");
     return;
   }
