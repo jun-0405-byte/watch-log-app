@@ -14,16 +14,29 @@
 
 <h1>⌚ Watch Log</h1>
 
+
+<!-- ============================== -->
+<!-- Dashboard -->
+<!-- ============================== -->
+
 <div class="dashboard">
 
 <h2>📊 Dashboard</h2>
 
 <p id="totalWatch"></p>
+
 <p id="totalCount"></p>
+
 <p id="topWatch"></p>
+
 <p id="lastWatch"></p>
 
 </div>
+
+
+<!-- ============================== -->
+<!-- Ranking -->
+<!-- ============================== -->
 
 <div class="card">
 
@@ -33,17 +46,26 @@
 
 </div>
 
+
+<!-- ============================== -->
+<!-- Calendar -->
+<!-- ============================== -->
+
 <div class="card">
 
 <h2>📅 Wear Calendar</h2>
 
 <div class="calendar-header">
 
-<button onclick="changeMonth(-1)">◀</button>
+<button onclick="changeMonth(-1)">
+◀
+</button>
 
 <h3 id="calendarTitle"></h3>
 
-<button onclick="changeMonth(1)">▶</button>
+<button onclick="changeMonth(1)">
+▶
+</button>
 
 </div>
 
@@ -51,19 +73,31 @@
 
 </div>
 
+
+<!-- ============================== -->
+<!-- Wear Registration -->
+<!-- ============================== -->
+
 <div class="card">
 
 <h2>📝 着用登録</h2>
 
-<label>📅 日付</label>
+<label>
+📅 日付
+</label>
 
 <br>
 
-<input type="date" id="wearDate">
+<input
+type="date"
+id="wearDate"
+>
 
 <br><br>
 
-<label>⌚ 時計</label>
+<label>
+⌚ 時計
+</label>
 
 <br>
 
@@ -71,9 +105,16 @@
 
 <br><br>
 
-<button onclick="addWearLog()">記録する</button>
+<button onclick="addWearLog()">
+記録する
+</button>
 
 </div>
+
+
+<!-- ============================== -->
+<!-- Wear History -->
+<!-- ============================== -->
 
 <div class="card">
 
@@ -83,9 +124,62 @@
 
 </div>
 
+
+<!-- ============================== -->
+<!-- Collection -->
+<!-- ============================== -->
+
+<div class="card">
+
 <h2>⌚ Collection</h2>
 
+<p class="collection-help">
+時計をタップすると、その時計の着用履歴を表示します
+</p>
+
 <div id="watches"></div>
+
+</div>
+
+
+<!-- ============================== -->
+<!-- Watch Detail -->
+<!-- ============================== -->
+
+<div
+id="watchDetail"
+class="watch-detail"
+style="display:none;"
+>
+
+<div class="card">
+
+<button
+class="back-button"
+onclick="closeWatchDetail()"
+>
+← Collectionに戻る
+</button>
+
+<h2 id="detailWatchName"></h2>
+
+<img
+id="detailWatchImage"
+class="detail-watch-image"
+>
+
+<p id="detailWatchCount"></p>
+
+<p id="detailWatchLast"></p>
+
+<h3>📋 着用履歴</h3>
+
+<div id="detailWatchHistory"></div>
+
+</div>
+
+</div>
+
 
 <script src="app.js"></script>
 
