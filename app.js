@@ -46,7 +46,6 @@ let calendarDate = new Date();
 // ==============================
 
 function formatDate(date) {
-
   const y = date.getFullYear();
   const m = String(date.getMonth() + 1).padStart(2, "0");
   const d = String(date.getDate()).padStart(2, "0");
@@ -113,14 +112,17 @@ function addWearLog() {
     document.getElementById("watchSelect").value;
 
   if (!date) {
-
     alert("日付を選択してください");
-
     return;
   }
 
   const watch =
     watches[watchIndex];
+
+  if (!watch) {
+    alert("時計を選択してください");
+    return;
+  }
 
   wearLogs.push({
     date: date,
@@ -435,7 +437,7 @@ function renderCalendar() {
 
 
 // ==============================
-// 着用履歴
+// 全着用履歴
 // ==============================
 
 function renderWearHistory() {
@@ -554,34 +556,10 @@ function deleteWearLog(index) {
 
 
 // ==============================
-// 月変更
-// ==============================
-
-function changeMonth(direction) {
-
-  calendarDate.setMonth(
-    calendarDate.getMonth() + direction
-  );
-
-  renderCalendar();
-
-}
-
-
-// ==============================
 // 時計ごとの履歴
 // ==============================
 
 function showWatchHistory(watchName) {
-
-  const history =
-    wearLogs
-      .filter(log => log.name === watchName)
-      .sort(
-        (a, b) =>
-          b.date.localeCompare(a.date)
-      );
-
 
   const old =
     document.getElementById("watchDetail");
@@ -589,6 +567,20 @@ function showWatchHistory(watchName) {
   if (old) {
     old.remove();
   }
+
+
+  const history =
+    wearLogs
+      .map((log, index) => ({
+        date: log.date,
+        name: log.name,
+        originalIndex: index
+      }))
+      .filter(log => log.name === watchName)
+      .sort(
+        (a, b) =>
+          b.date.localeCompare(a.date)
+      );
 
 
   const section =
@@ -601,49 +593,117 @@ function showWatchHistory(watchName) {
     "card";
 
 
-  let html = `
-    <h2>⌚ ${watchName}</h2>
-    <p>着用回数：${history.length}回</p>
-  `;
+  const title =
+    document.createElement("h2");
+
+  title.textContent =
+    `⌚ ${watchName}`;
+
+  section.appendChild(title);
+
+
+  const count =
+    document.createElement("p");
+
+  count.textContent =
+    `着用回数：${history.length}回`;
+
+  section.appendChild(count);
 
 
   if (history.length === 0) {
 
-    html +=
-      "<p>まだ着用履歴がありません</p>";
+    const empty =
+      document.createElement("p");
+
+    empty.textContent =
+      "まだ着用履歴がありません";
+
+    section.appendChild(empty);
 
   } else {
 
-    html += "<div>";
-
     history.forEach(log => {
 
-      html += `
-        <p>
-          📅 ${formatDisplayDate(log.date)}
-        </p>
-      `;
+      const row =
+        document.createElement("div");
+
+      row.className =
+        "wear-history-item";
+
+
+      const text =
+        document.createElement("span");
+
+      text.textContent =
+        `📅 ${formatDisplayDate(log.date)}`;
+
+
+      const button =
+        document.createElement("button");
+
+      button.textContent =
+        "削除";
+
+
+      button.onclick = () => {
+
+        const result =
+          confirm(
+            `${watchName}\n${formatDisplayDate(log.date)} の着用記録を削除しますか？`
+          );
+
+
+        if (!result) {
+          return;
+        }
+
+
+        wearLogs.splice(
+          log.originalIndex,
+          1
+        );
+
+
+        localStorage.setItem(
+          "watchWearLogs",
+          JSON.stringify(wearLogs)
+        );
+
+
+        renderAll();
+
+        showWatchHistory(watchName);
+
+      };
+
+
+      row.appendChild(text);
+      row.appendChild(button);
+
+      section.appendChild(row);
 
     });
-
-    html += "</div>";
 
   }
 
 
-  html += `
-    <button onclick="closeWatchHistory()">
-      閉じる
-    </button>
-  `;
+  const closeButton =
+    document.createElement("button");
+
+  closeButton.textContent =
+    "閉じる";
+
+  closeButton.onclick =
+    closeWatchHistory;
 
 
-  section.innerHTML =
-    html;
+  section.appendChild(closeButton);
 
 
   const collection =
     document.getElementById("watches");
+
 
   collection.parentNode.insertBefore(
     section,
@@ -686,7 +746,7 @@ function renderWatches() {
   container.innerHTML = "";
 
 
-  watches.forEach((watch, index) => {
+  watches.forEach(watch => {
 
     const count =
       getWearCount(watch.name);
@@ -720,7 +780,7 @@ function renderWatches() {
       </p>
 
       <button
-        onclick="showWatchHistory('${watch.name.replace(/'/g, "\\'")}')"
+        onclick="showWatchHistory(${JSON.stringify(watch.name)})"
       >
         この時計の着用履歴を見る
       </button>
