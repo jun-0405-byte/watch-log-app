@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
 
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -10,14 +11,13 @@
 
 </head>
 
+
 <body>
+
+<div id="mainPage">
 
 <h1>⌚ Watch Log</h1>
 
-
-<!-- ============================== -->
-<!-- Dashboard -->
-<!-- ============================== -->
 
 <div class="dashboard">
 
@@ -34,10 +34,6 @@
 </div>
 
 
-<!-- ============================== -->
-<!-- Ranking -->
-<!-- ============================== -->
-
 <div class="card">
 
 <h2>🏆 着用ランキング</h2>
@@ -47,25 +43,17 @@
 </div>
 
 
-<!-- ============================== -->
-<!-- Calendar -->
-<!-- ============================== -->
-
 <div class="card">
 
 <h2>📅 Wear Calendar</h2>
 
 <div class="calendar-header">
 
-<button onclick="changeMonth(-1)">
-◀
-</button>
+<button onclick="changeMonth(-1)">◀</button>
 
 <h3 id="calendarTitle"></h3>
 
-<button onclick="changeMonth(1)">
-▶
-</button>
+<button onclick="changeMonth(1)">▶</button>
 
 </div>
 
@@ -74,30 +62,19 @@
 </div>
 
 
-<!-- ============================== -->
-<!-- Wear Registration -->
-<!-- ============================== -->
-
 <div class="card">
 
 <h2>📝 着用登録</h2>
 
-<label>
-📅 日付
-</label>
+<label>📅 日付</label>
 
 <br>
 
-<input
-type="date"
-id="wearDate"
->
+<input type="date" id="wearDate">
 
 <br><br>
 
-<label>
-⌚ 時計
-</label>
+<label>⌚ 時計</label>
 
 <br>
 
@@ -112,10 +89,6 @@ id="wearDate"
 </div>
 
 
-<!-- ============================== -->
-<!-- Wear History -->
-<!-- ============================== -->
-
 <div class="card">
 
 <h2>📋 着用履歴</h2>
@@ -125,54 +98,46 @@ id="wearDate"
 </div>
 
 
-<!-- ============================== -->
-<!-- Collection -->
-<!-- ============================== -->
-
-<div class="card">
-
 <h2>⌚ Collection</h2>
-
-<p class="collection-help">
-時計をタップすると、その時計の着用履歴を表示します
-</p>
 
 <div id="watches"></div>
 
 </div>
 
 
-<!-- ============================== -->
-<!-- Watch Detail -->
-<!-- ============================== -->
+<!-- ==========================
+     時計詳細ページ
+========================== -->
 
-<div
-id="watchDetail"
-class="watch-detail"
-style="display:none;"
->
-
-<div class="card">
+<div id="watchDetailPage" style="display:none;">
 
 <button
-class="back-button"
-onclick="closeWatchDetail()"
+  class="back-button"
+  onclick="closeWatchDetail()"
 >
 ← Collectionに戻る
 </button>
 
-<h2 id="detailWatchName"></h2>
+
+<div class="card watch-detail">
 
 <img
-id="detailWatchImage"
-class="detail-watch-image"
+  id="detailWatchImage"
+  class="detail-image"
+  src=""
+  alt=""
 >
+
+
+<h2 id="detailWatchName"></h2>
+
 
 <p id="detailWatchCount"></p>
 
 <p id="detailWatchLast"></p>
 
-<h3>📋 着用履歴</h3>
+
+<h3>📋 この時計の着用履歴</h3>
 
 <div id="detailWatchHistory"></div>
 
