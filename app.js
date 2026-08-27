@@ -5,39 +5,85 @@
 // 時計コレクション
 const watches = [
   {
-    name: "ロレックス サブマリーナ ノンデイト",
+    name: "ROLEX サブマリーナー",
     image: "images/IMG_2638.jpeg"
   },
   {
-    name: "ロレックス ヨットマスター37",
+    name: "ROLEX ヨットマスター 37",
     image: "images/IMG_3378.jpeg"
   },
   {
-    name: "ロレックス エクスプローラー36",
+    name: "ROLEX エクスプローラー 36",
     image: "images/41185953-24CB-4223-997D-29C1D9C4AD32.jpeg"
   },
   {
-    name: "ロレックス GMTマスター2 コンビ エバーローズ",
+    name: "ROLEX GMTマスターⅡ EGコンビ",
     image: "images/IMG_6357.jpeg"
   },
   {
-    name: "ハミルトン カーキフィールド メカニカル",
+    name: "Hamilton カーキ フィールド MECHANICAL 38MM",
     image: "images/IMG_9658.jpeg"
   },
   {
-    name: "G-SHOCK 初代復刻モデル",
+    name: "G-SHOCK DW-5000R-1AJF",
     image: "images/IMG_9659.jpeg"
   }
 ];
 
 
 // ==============================
-// データ
+// 着用履歴データ
 // ==============================
 
 let wearLogs = JSON.parse(
   localStorage.getItem("watchWearLogs") || "[]"
 );
+
+
+// ==============================
+// 過去の時計名を新しい名前へ変換
+// ==============================
+
+const nameMap = {
+  "ロレックス サブマリーナ ノンデイト":
+    "ROLEX サブマリーナー",
+
+  "ロレックス ヨットマスター37":
+    "ROLEX ヨットマスター 37",
+
+  "ロレックス エクスプローラー36":
+    "ROLEX エクスプローラー 36",
+
+  "ロレックス GMTマスター2 コンビ エバーローズ":
+    "ROLEX GMTマスターⅡ EGコンビ",
+
+  "ハミルトン カーキフィールド メカニカル":
+    "Hamilton カーキ フィールド MECHANICAL 38MM",
+
+  "G-SHOCK 初代復刻モデル":
+    "G-SHOCK DW-5000R-1AJF"
+};
+
+let historyChanged = false;
+
+wearLogs.forEach(log => {
+  if (nameMap[log.name]) {
+    log.name = nameMap[log.name];
+    historyChanged = true;
+  }
+});
+
+if (historyChanged) {
+  localStorage.setItem(
+    "watchWearLogs",
+    JSON.stringify(wearLogs)
+  );
+}
+
+
+// ==============================
+// カレンダー
+// ==============================
 
 let calendarDate = new Date();
 
@@ -47,27 +93,20 @@ let calendarDate = new Date();
 // ==============================
 
 function formatDate(date) {
-
   const y = date.getFullYear();
-
-  const m =
-    String(date.getMonth() + 1).padStart(2, "0");
-
-  const d =
-    String(date.getDate()).padStart(2, "0");
+  const m = String(date.getMonth() + 1).padStart(2, "0");
+  const d = String(date.getDate()).padStart(2, "0");
 
   return `${y}-${m}-${d}`;
 }
 
 
 function formatDisplayDate(dateString) {
-
   if (!dateString) {
     return "未着用";
   }
 
-  const parts =
-    dateString.split("-");
+  const parts = dateString.split("-");
 
   return `${parts[0]}/${parts[1]}/${parts[2]}`;
 }
@@ -82,6 +121,10 @@ function createWatchSelect() {
   const select =
     document.getElementById("watchSelect");
 
+  if (!select) {
+    return;
+  }
+
   select.innerHTML = "";
 
   watches.forEach((watch, index) => {
@@ -90,9 +133,7 @@ function createWatchSelect() {
       document.createElement("option");
 
     option.value = index;
-
-    option.textContent =
-      watch.name;
+    option.textContent = watch.name;
 
     select.appendChild(option);
 
@@ -113,9 +154,7 @@ function addWearLog() {
     document.getElementById("watchSelect").value;
 
   if (!date) {
-
     alert("日付を選択してください");
-
     return;
   }
 
@@ -123,9 +162,7 @@ function addWearLog() {
     watches[watchIndex];
 
   if (!watch) {
-
     alert("時計を選択してください");
-
     return;
   }
 
@@ -156,6 +193,7 @@ function getWearCount(name) {
   return wearLogs.filter(
     log => log.name === name
   ).length;
+
 }
 
 
@@ -174,9 +212,7 @@ function getLastWearDate(name) {
       );
 
   if (logs.length === 0) {
-
     return null;
-
   }
 
   return logs[0].date;
@@ -205,42 +241,52 @@ function renderDashboard() {
     (a, b) => b.count - a.count
   );
 
-  if (wearLogs.length === 0) {
+  if (wearLogs.length > 0) {
+
+    const top = counts[0];
+
+    document.getElementById("topWatch").textContent =
+      `最多着用：${top.name}（${top.count}回）`;
+
+  } else {
 
     document.getElementById("topWatch").textContent =
       "最多着用：まだ記録がありません";
 
+  }
+
+  if (wearLogs.length > 0) {
+
+    const latest =
+      [...wearLogs].sort(
+        (a, b) =>
+          b.date.localeCompare(a.date)
+      )[0];
+
+    document.getElementById("lastWatch").textContent =
+      `最終着用：${latest.name}（${formatDisplayDate(latest.date)}）`;
+
+  } else {
+
     document.getElementById("lastWatch").textContent =
       "最終着用：まだ記録がありません";
 
-    return;
   }
-
-  const top =
-    counts[0];
-
-  document.getElementById("topWatch").textContent =
-    `最多着用：${top.name}（${top.count}回）`;
-
-  const latest =
-    [...wearLogs].sort(
-      (a, b) =>
-        b.date.localeCompare(a.date)
-    )[0];
-
-  document.getElementById("lastWatch").textContent =
-    `最終着用：${latest.name}（${formatDisplayDate(latest.date)}）`;
 }
 
 
 // ==============================
-// Ranking
+// ランキング
 // ==============================
 
 function renderRanking() {
 
   const ranking =
     document.getElementById("ranking");
+
+  if (!ranking) {
+    return;
+  }
 
   ranking.innerHTML = "";
 
@@ -264,17 +310,18 @@ function renderRanking() {
 
     div.innerHTML = `
       <strong>${index + 1}位</strong>
-      ${item.name}
+      <span>${item.name}</span>
       <span>${item.count}回</span>
     `;
 
     ranking.appendChild(div);
+
   });
 }
 
 
 // ==============================
-// Calendar
+// カレンダー
 // ==============================
 
 function renderCalendar() {
@@ -284,6 +331,10 @@ function renderCalendar() {
 
   const title =
     document.getElementById("calendarTitle");
+
+  if (!calendar || !title) {
+    return;
+  }
 
   const year =
     calendarDate.getFullYear();
@@ -318,6 +369,7 @@ function renderCalendar() {
       day;
 
     calendar.appendChild(div);
+
   });
 
   const firstDay =
@@ -339,6 +391,7 @@ function renderCalendar() {
       "calendar-day empty";
 
     calendar.appendChild(empty);
+
   }
 
   for (
@@ -362,11 +415,10 @@ function renderCalendar() {
       "calendar-day";
 
     if (
-      dateString === formatDate(new Date())
+      dateString ===
+      formatDate(new Date())
     ) {
-
       div.classList.add("today");
-
     }
 
     div.innerHTML = `
@@ -387,44 +439,34 @@ function renderCalendar() {
 
       logs.forEach(log => {
 
+        const shortName =
+          log.name
+            .replace("ROLEX ", "")
+            .replace("Hamilton ", "")
+            .replace("G-SHOCK ", "");
+
         const watchDiv =
           document.createElement("div");
 
         watchDiv.textContent =
-          log.name
-            .replace("ロレックス ", "")
-            .replace("ハミルトン ", "")
-            .replace("G-SHOCK ", "");
+          shortName;
 
-        names.appendChild(
-          watchDiv
-        );
+        names.appendChild(watchDiv);
+
       });
 
       div.appendChild(names);
     }
 
     calendar.appendChild(div);
+
   }
 }
 
 
 // ==============================
-// 月変更
-// ==============================
-
-function changeMonth(direction) {
-
-  calendarDate.setMonth(
-    calendarDate.getMonth() + direction
-  );
-
-  renderCalendar();
-}
-
-
-// ==============================
 // 着用履歴
+// 最新5件だけ表示
 // ==============================
 
 function renderWearHistory() {
@@ -458,7 +500,10 @@ function renderWearHistory() {
           b.date.localeCompare(a.date)
       );
 
-  logs.forEach(log => {
+  const latestLogs =
+    logs.slice(0, 5);
+
+  latestLogs.forEach(log => {
 
     const div =
       document.createElement("div");
@@ -478,21 +523,177 @@ function renderWearHistory() {
     button.textContent =
       "削除";
 
-    button.onclick = function(event) {
-
-      event.stopPropagation();
+    button.onclick = () => {
 
       deleteWearLog(
         log.originalIndex
       );
+
     };
 
     div.appendChild(text);
-
     div.appendChild(button);
 
     container.appendChild(div);
+
   });
+}
+
+
+// ==============================
+// 時計詳細
+// ==============================
+
+function openWatchDetail(index) {
+
+  const watch =
+    watches[index];
+
+  if (!watch) {
+    return;
+  }
+
+  const mainPage =
+    document.getElementById("mainPage");
+
+  const detailPage =
+    document.getElementById("watchDetailPage");
+
+  const image =
+    document.getElementById("detailWatchImage");
+
+  const name =
+    document.getElementById("detailWatchName");
+
+  const count =
+    document.getElementById("detailWatchCount");
+
+  const last =
+    document.getElementById("detailWatchLast");
+
+  const history =
+    document.getElementById("detailWatchHistory");
+
+  if (
+    !mainPage ||
+    !detailPage ||
+    !image ||
+    !name ||
+    !count ||
+    !last ||
+    !history
+  ) {
+    return;
+  }
+
+  mainPage.style.display = "none";
+  detailPage.style.display = "block";
+
+  image.src = watch.image;
+  image.alt = watch.name;
+
+  name.textContent = watch.name;
+
+  count.textContent =
+    `着用回数：${getWearCount(watch.name)}回`;
+
+  last.textContent =
+    `最終着用：${formatDisplayDate(
+      getLastWearDate(watch.name)
+    )}`;
+
+  history.innerHTML = "";
+
+  const logs =
+    wearLogs
+      .map((log, originalIndex) => ({
+        date: log.date,
+        name: log.name,
+        originalIndex: originalIndex
+      }))
+      .filter(
+        log =>
+          log.name === watch.name
+      )
+      .sort(
+        (a, b) =>
+          b.date.localeCompare(a.date)
+      );
+
+  const latestLogs =
+    logs.slice(0, 5);
+
+  if (latestLogs.length === 0) {
+
+    history.innerHTML =
+      "<p>まだ着用履歴がありません</p>";
+
+    return;
+  }
+
+  latestLogs.forEach(log => {
+
+    const row =
+      document.createElement("div");
+
+    row.className =
+      "wear-history-item";
+
+    const text =
+      document.createElement("span");
+
+    text.textContent =
+      formatDisplayDate(log.date);
+
+    const button =
+      document.createElement("button");
+
+    button.textContent =
+      "削除";
+
+    button.onclick = () => {
+
+      deleteWearLog(
+        log.originalIndex
+      );
+
+      openWatchDetail(index);
+
+    };
+
+    row.appendChild(text);
+    row.appendChild(button);
+
+    history.appendChild(row);
+
+  });
+}
+
+
+// ==============================
+// 詳細画面を閉じる
+// ==============================
+
+function closeWatchDetail() {
+
+  const detailPage =
+    document.getElementById(
+      "watchDetailPage"
+    );
+
+  const mainPage =
+    document.getElementById(
+      "mainPage"
+    );
+
+  if (detailPage) {
+    detailPage.style.display = "none";
+  }
+
+  if (mainPage) {
+    mainPage.style.display = "block";
+  }
+
 }
 
 
@@ -518,10 +719,7 @@ function deleteWearLog(index) {
     return;
   }
 
-  wearLogs.splice(
-    index,
-    1
-  );
+  wearLogs.splice(index, 1);
 
   localStorage.setItem(
     "watchWearLogs",
@@ -529,147 +727,22 @@ function deleteWearLog(index) {
   );
 
   renderAll();
+
 }
 
 
 // ==============================
-// 時計詳細画面
+// 月変更
 // ==============================
 
-function openWatchDetail(name) {
+function changeMonth(direction) {
 
-  const watch =
-    watches.find(
-      item => item.name === name
-    );
+  calendarDate.setMonth(
+    calendarDate.getMonth() + direction
+  );
 
-  if (!watch) {
-    return;
-  }
+  renderCalendar();
 
-  const detail =
-    document.getElementById("watchDetail");
-
-  const nameElement =
-    document.getElementById("detailWatchName");
-
-  const imageElement =
-    document.getElementById("detailWatchImage");
-
-  const countElement =
-    document.getElementById("detailWatchCount");
-
-  const lastElement =
-    document.getElementById("detailWatchLast");
-
-  const historyElement =
-    document.getElementById("detailWatchHistory");
-
-  const logs =
-    wearLogs
-      .map((log, index) => ({
-        ...log,
-        originalIndex: index
-      }))
-      .filter(
-        log => log.name === name
-      )
-      .sort(
-        (a, b) =>
-          b.date.localeCompare(a.date)
-      );
-
-  nameElement.textContent =
-    watch.name;
-
-  imageElement.src =
-    watch.image;
-
-  imageElement.alt =
-    watch.name;
-
-  countElement.textContent =
-    `着用回数：${logs.length}回`;
-
-  lastElement.textContent =
-    `最終着用：${
-      logs.length > 0
-        ? formatDisplayDate(logs[0].date)
-        : "未着用"
-    }`;
-
-  historyElement.innerHTML = "";
-
-  if (logs.length === 0) {
-
-    historyElement.innerHTML =
-      "<p>まだ着用履歴がありません</p>";
-
-  } else {
-
-    logs.forEach(log => {
-
-      const row =
-        document.createElement("div");
-
-      row.className =
-        "wear-history-item";
-
-      const text =
-        document.createElement("span");
-
-      text.textContent =
-        formatDisplayDate(log.date);
-
-      const button =
-        document.createElement("button");
-
-      button.textContent =
-        "削除";
-
-      button.onclick = function() {
-
-        deleteWearLog(
-          log.originalIndex
-        );
-
-        openWatchDetail(name);
-      };
-
-      row.appendChild(text);
-
-      row.appendChild(button);
-
-      historyElement.appendChild(row);
-    });
-  }
-
-  detail.style.display =
-    "block";
-
-  window.scrollTo({
-    top: 0,
-    behavior: "smooth"
-  });
-}
-
-
-// ==============================
-// 時計詳細画面を閉じる
-// ==============================
-
-function closeWatchDetail() {
-
-  const detail =
-    document.getElementById("watchDetail");
-
-  detail.style.display =
-    "none";
-
-  window.scrollTo({
-    top: 0,
-    behavior: "smooth"
-  });
 }
 
 
@@ -682,9 +755,13 @@ function renderWatches() {
   const container =
     document.getElementById("watches");
 
+  if (!container) {
+    return;
+  }
+
   container.innerHTML = "";
 
-  watches.forEach(watch => {
+  watches.forEach((watch, index) => {
 
     const count =
       getWearCount(watch.name);
@@ -698,24 +775,15 @@ function renderWatches() {
     card.className =
       "watch-card";
 
-    card.onclick = function() {
-
-      openWatchDetail(
-        watch.name
-      );
-
-    };
-
-    card.style.cursor =
-      "pointer";
-
     card.innerHTML = `
       <img
         src="${watch.image}"
         alt="${watch.name}"
       >
 
-      <h3>${watch.name}</h3>
+      <h3>
+        ${watch.name}
+      </h3>
 
       <p>
         着用回数：${count}回
@@ -725,14 +793,20 @@ function renderWatches() {
         最終着用：
         ${formatDisplayDate(lastDate)}
       </p>
-
-      <p class="watch-tap">
-        👆 タップして詳細を見る
-      </p>
     `;
 
+    card.style.cursor = "pointer";
+
+    card.onclick = () => {
+
+      openWatchDetail(index);
+
+    };
+
     container.appendChild(card);
+
   });
+
 }
 
 
@@ -751,6 +825,7 @@ function renderAll() {
   renderWearHistory();
 
   renderWatches();
+
 }
 
 
@@ -758,9 +833,16 @@ function renderAll() {
 // 初期表示
 // ==============================
 
-createWatchSelect();
+const wearDate =
+  document.getElementById("wearDate");
 
-document.getElementById("wearDate").value =
-  formatDate(new Date());
+if (wearDate) {
+
+  wearDate.value =
+    formatDate(new Date());
+
+}
+
+createWatchSelect();
 
 renderAll();
