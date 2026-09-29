@@ -27,6 +27,10 @@ const watches = [
   {
     name: "G-SHOCK DW-5000R-1AJF",
     image: "images/IMG_9659.jpeg"
+  },
+  {
+    name: "ROLEX GMTマスターⅡ 黒青ジュビリー",
+    image: "images/IMG_9852.jpeg"
   }
 ];
 
@@ -61,7 +65,10 @@ const nameMap = {
     "Hamilton カーキ フィールド MECHANICAL 38MM",
 
   "G-SHOCK 初代復刻モデル":
-    "G-SHOCK DW-5000R-1AJF"
+    "G-SHOCK DW-5000R-1AJF",
+
+  "ROLEX GMTマスター2 黒青ジュビリー":
+    "ROLEX GMTマスターⅡ 黒青ジュビリー"
 };
 
 let historyChanged = false;
@@ -667,6 +674,7 @@ function openWatchDetail(index) {
     history.appendChild(row);
 
   });
+
 }
 
 
